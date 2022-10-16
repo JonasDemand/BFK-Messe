@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Terminal.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="25"
+            Padding="30,0"
+            VerticalOptions="Center">
+            <Label
+                Text="Kundenregistrierung"
+                FontSize="18"
+                HorizontalOptions="Center" />
+            <Button
+                x:Name="CounterBtn"
+                Text="Webcam :)"
+                Clicked="OnWebcamClicked"
+                HorizontalOptions="Center" />
+            <Label x:Name="Base64Label" />
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
+
