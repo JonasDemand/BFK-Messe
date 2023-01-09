@@ -1,0 +1,31 @@
+﻿@page "/"
+<Steps @ref="stepsRef" @bind-SelectedStep="selectedStep">
+    <Items>
+        <Step Name="Form">Stammdaten</Step>
+        <Step Name="Picture">Portrait</Step>
+        <Step Name="Overview">Übersicht</Step>
+    </Items>
+    <Content>
+        <StepPanel Name="Form" Margin="Margin.Is2.FromEnd">
+            <DataForm />
+        </StepPanel>
+        <StepPanel Name="Picture" Margin="Margin.Is2.FromEnd">
+            Picture
+        </StepPanel>
+        <StepPanel Name="Overview" Margin="Margin.Is2.FromEnd">
+            Overview
+        </StepPanel>
+    </Content>
+</Steps>
+<Div Display="Display.Flex" Class="justify-content-center" Margin="Margin.Is2.FromEnd">
+    <Button Color="Color.Secondary" Margin="Margin.Is2.FromEnd" Clicked="() => stepsRef.PreviousStep()">
+        Zurück
+    </Button>
+    <Button Color="Color.Primary" Clicked="() => stepsRef.NextStep()">
+        Weiter
+    </Button>
+</Div>
+@code {
+    private Steps stepsRef;
+    private string selectedStep = "Form";
+}
