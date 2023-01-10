@@ -38,7 +38,7 @@
                         <Text>Produktgruppen</Text>
                         @foreach (var gruppe in produktgruppen)
                         {
-                            <Check TValue="bool" CheckedChanged="(bool val) => handleProduktgruppenChange(gruppe, val)">@gruppe.Name</Check>
+                            <Check TValue="bool" Checked="kunde.Produktgruppen.Where(x => x.Id == gruppe.Id).FirstOrDefault() != null" CheckedChanged="(bool val) => handleProduktgruppenChange(gruppe, val)">@gruppe.Name</Check>
                         }
                     </Column>
                 </Row>
@@ -47,7 +47,7 @@
         <StepPanel Name="Picture" Margin="Margin.Is2.OnAll">
             <Div Style="height: 300px">
                 <Div Display="Display.Flex" Class="justify-content-center">
-                    <Button Color="Color.Primary" Clicked="@handleCaptureClick" Disabled="@(kunde.Bild != null)">
+                    <Button Color="Color.Primary" Clicked="@handleCaptureClick" disabled="@(kunde.Bild != null)">
                         <Icon Name="IconName.Camera"/>
                         Bild aufnehmen
                     </Button>
@@ -90,14 +90,13 @@
         var photo = await MediaPicker.Default.CapturePhotoAsync();
         if (photo == null) return;
 
-        byte[] bytes;
         await using var sourceStream = await photo.OpenReadAsync();
-        using (var memoryStream = new MemoryStream())
-        {
-            await sourceStream.CopyToAsync(memoryStream);
-            bytes = memoryStream.ToArray();
-        }
-        kunde.Bild = Convert.ToBase64String(bytes);
+        using var memoryStream = new MemoryStream();
+        await sourceStream.CopyToAsync(memoryStream);
+        kunde.Bild = Convert.ToBase64String(memoryStream.ToArray());
+
+        //Force refresh for camera button to disable
+        StateHasChanged();
     }
 
     private void handleProduktgruppenChange(Produktgruppe produktgruppe, bool val)
