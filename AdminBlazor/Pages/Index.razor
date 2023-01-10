@@ -2,7 +2,7 @@
 @using DbConnection.Entities
 @using DbConnection.Repositories
 
-<TextEdit Placeholder="Suche..."/>
+<TextEdit Placeholder="Suche..." TextChanged="@handleSearch" Margin="Margin.Is2.OnY"/>
 <Table>
     <TableHeader>
         <TableRow>
@@ -16,7 +16,7 @@
         </TableRow>
     </TableHeader>
     <TableBody>
-        @foreach(var kunde in kunden)
+        @foreach(var kunde in filteredKunden)
         {
             <TableRow>
                 <TableRowHeader>@kunde.Id</TableRowHeader>
@@ -31,5 +31,19 @@
     </TableBody>
 </Table>
 @code {
-    private List<Kunde> kunden = KundenRepository.GetAll();
+    private List<Kunde> kunden;
+    private List<Kunde> filteredKunden;
+
+    private void handleSearch(string value)
+    {
+        if (string.IsNullOrEmpty(value)) filteredKunden = kunden;
+        var query = value.ToLower();
+        filteredKunden = kunden.Where(x => x.Nachname.ToLower().StartsWith(query)).ToList();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        kunden = KundenRepository.GetAll();
+        filteredKunden = kunden;
+    }
 }
