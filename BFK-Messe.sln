@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TerminalBlazor", "TerminalB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbConnection", "DbConnection\DbConnection.csproj", "{F2D165C1-1705-4177-915D-570CEA4E9869}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminBlazor", "AdminBlazor\AdminBlazor.csproj", "{33479766-8173-4A72-AED0-BDFD77D432D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F2D165C1-1705-4177-915D-570CEA4E9869}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2D165C1-1705-4177-915D-570CEA4E9869}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2D165C1-1705-4177-915D-570CEA4E9869}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33479766-8173-4A72-AED0-BDFD77D432D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33479766-8173-4A72-AED0-BDFD77D432D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33479766-8173-4A72-AED0-BDFD77D432D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33479766-8173-4A72-AED0-BDFD77D432D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

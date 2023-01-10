@@ -1,0 +1,35 @@
+﻿@page "/"
+@using DbConnection.Entities
+@using DbConnection.Repositories
+
+<TextEdit Placeholder="Suche..."/>
+<Table>
+    <TableHeader>
+        <TableRow>
+            <TableHeaderCell>Id</TableHeaderCell>
+            <TableHeaderCell>Vorname</TableHeaderCell>
+            <TableHeaderCell>Nachname</TableHeaderCell>
+            <TableHeaderCell>Adresszeile 1</TableHeaderCell>
+            <TableHeaderCell>Adresszeile 2</TableHeaderCell>
+            <TableHeaderCell>Unternehmen</TableHeaderCell>
+            <TableHeaderCell>Produktgruppen</TableHeaderCell>
+        </TableRow>
+    </TableHeader>
+    <TableBody>
+        @foreach(var kunde in kunden)
+        {
+            <TableRow>
+                <TableRowHeader>@kunde.Id</TableRowHeader>
+                <TableRowCell>@kunde.Vorname</TableRowCell>
+                <TableRowCell>@kunde.Nachname</TableRowCell>
+                <TableRowCell>@kunde.Adress1</TableRowCell>
+                <TableRowCell>@kunde.Adress2</TableRowCell>
+                <TableRowCell>@kunde.Unternehmen?.Name</TableRowCell>
+                <TableRowCell>@(string.Join(", ", kunde.Produktgruppen.Select(x => x.Name)))</TableRowCell>
+            </TableRow>
+        }
+    </TableBody>
+</Table>
+@code {
+    private List<Kunde> kunden = KundenRepository.GetAll();
+}
