@@ -1,37 +1,122 @@
 ﻿@page "/"
+@using DbConnection.Entities
+@using DbConnection.Repositories
 
 <Steps @ref="stepsRef" @bind-SelectedStep="selectedStep">
     <Items>
         <Step Name="Form">Stammdaten</Step>
         <Step Name="Picture">Portrait</Step>
-        <Step Name="Overview">Übersicht</Step>
     </Items>
     <Content>
         <StepPanel Name="Form" Margin="Margin.Is2.OnAll">
-            <DataForm />
+            <Div Style="height: 300px">
+                <Row Margin="Margin.Is2.FromBottom">
+                    <Column ColumnSize="ColumnSize.Is6">
+                        <TextEdit Placeholder="Vorname" @bind-text="@kunde.Vorname" />
+                    </Column>
+                    <Column ColumnSize="ColumnSize.Is6">
+                        <TextEdit Placeholder="Nachname" @bind-text="@kunde.Nachname" />
+                    </Column>
+                </Row>
+                <Row Margin="Margin.Is2.FromBottom">
+                    <Column ColumnSize="ColumnSize.Is6">
+                        <TextEdit Placeholder="Unternehmen" @bind-text="@kunde.Unternehmen.Name" />
+                    </Column>
+                </Row>
+                <Row Margin="Margin.Is2.FromBottom">
+                    <Column ColumnSize="ColumnSize.Is6">
+                        <TextEdit Placeholder="Adresszeile 1" @bind-text="@kunde.Adress1" />
+                    </Column>
+                </Row>
+                <Row Margin="Margin.Is2.FromBottom">
+                    <Column ColumnSize="ColumnSize.Is6">
+                        <TextEdit Placeholder="Adresszeile 2" @bind-text="@kunde.Adress2"  />
+                    </Column>
+                </Row>
+                <Row>
+                    <Column ColumnSize="ColumnSize.Is6">
+                        <Text>Produktgruppen</Text>
+                        @foreach (var gruppe in produktgruppen)
+                        {
+                            <Check TValue="bool" CheckedChanged="(bool val) => handleProduktgruppenChange(gruppe, val)">@gruppe.Name</Check>
+                        }
+                    </Column>
+                </Row>
+            </Div>
         </StepPanel>
         <StepPanel Name="Picture" Margin="Margin.Is2.OnAll">
-            <Container Style="width: fit-content">
-                <Button Color="Color.Primary">
-                    <Icon Name="IconName.Camera" />
-                    Bild aufnehmen
-                </Button>
-            </Container>
-        </StepPanel>
-        <StepPanel Name="Overview" Margin="Margin.Is2.OnAll">
-            Overview
+            <Div Style="height: 300px">
+                <Div Display="Display.Flex" Class="justify-content-center">
+                    <Button Color="Color.Primary" Clicked="@handleCaptureClick">
+                        <Icon Name="IconName.Camera"/>
+                        Bild aufnehmen
+                    </Button>
+                </Div>
+            </Div>
         </StepPanel>
     </Content>
 </Steps>
-<Div Display="Display.Flex" Class="justify-content-center" Margin="Margin.Is2.FromEnd">
+<Div Display="Display.Flex" Class="justify-content-center">
     <Button Color="Color.Secondary" Margin="Margin.Is2.FromEnd" Clicked="() => stepsRef.PreviousStep()">
         Zurück
     </Button>
     <Button Color="Color.Primary" Clicked="() => stepsRef.NextStep()">
-        Weiter
+        @if (stepsRef.SelectedStep == "Picture")
+        {
+            <span>Registrieren</span>
+        }
+        else
+        {
+            <span>Weiter</span>
+        }
     </Button>
 </Div>
 @code {
+    private static Kunde defaultKunde = new()
+    {
+        Produktgruppen = new List<Produktgruppe>(),
+        Unternehmen = new Unternehmen()
+        {
+            Id = -1
+        }
+    };
+    
     private Steps stepsRef;
     private string selectedStep = "Form";
+    private List<Produktgruppe> produktgruppen = ProduktgruppenRepository.GetAll();
+    private Kunde kunde = defaultKunde;
+    
+    private async void handleCaptureClick()
+    {
+        if (!MediaPicker.Default.IsCaptureSupported) return;
+        
+        var photo = await MediaPicker.Default.CapturePhotoAsync();
+        if (photo == null) return;
+        
+        byte[] bytes;
+        await using var sourceStream = await photo.OpenReadAsync();
+        using (var memoryStream = new MemoryStream())
+        {
+            await sourceStream.CopyToAsync(memoryStream);
+            bytes = memoryStream.ToArray();
+        }
+        kunde.Bild = Convert.ToBase64String(bytes);
+
+        KundenRepository.Insert(kunde);
+        
+        kunde = defaultKunde;
+        selectedStep = "Form";
+    }
+
+    private void handleProduktgruppenChange(Produktgruppe produktgruppe, bool val)
+    {
+        if (val)
+        {
+            kunde.Produktgruppen.Add(produktgruppe);
+        }
+        else
+        {
+            kunde.Produktgruppen.Remove(produktgruppe);
+        }
+    }
 }

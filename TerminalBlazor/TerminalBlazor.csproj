@@ -68,6 +68,6 @@
       <None Remove="Shared\" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Shared\" />
+      <ProjectReference Include="..\DbConnection\DbConnection.csproj" />
     </ItemGroup>
 </Project>
