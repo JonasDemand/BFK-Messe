@@ -1,4 +1,5 @@
 ﻿@page "/"
+
 <Steps @ref="stepsRef" @bind-SelectedStep="selectedStep">
     <Items>
         <Step Name="Form">Stammdaten</Step>
@@ -6,13 +7,18 @@
         <Step Name="Overview">Übersicht</Step>
     </Items>
     <Content>
-        <StepPanel Name="Form" Margin="Margin.Is2.FromEnd">
+        <StepPanel Name="Form" Margin="Margin.Is2.OnAll">
             <DataForm />
         </StepPanel>
-        <StepPanel Name="Picture" Margin="Margin.Is2.FromEnd">
-            Picture
+        <StepPanel Name="Picture" Margin="Margin.Is2.OnAll">
+            <Container Style="width: fit-content">
+                <Button Color="Color.Primary">
+                    <Icon Name="IconName.Camera" />
+                    Bild aufnehmen
+                </Button>
+            </Container>
         </StepPanel>
-        <StepPanel Name="Overview" Margin="Margin.Is2.FromEnd">
+        <StepPanel Name="Overview" Margin="Margin.Is2.OnAll">
             Overview
         </StepPanel>
     </Content>
