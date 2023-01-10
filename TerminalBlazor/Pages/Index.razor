@@ -47,7 +47,7 @@
         <StepPanel Name="Picture" Margin="Margin.Is2.OnAll">
             <Div Style="height: 300px">
                 <Div Display="Display.Flex" Class="justify-content-center">
-                    <Button Color="Color.Primary" Clicked="@handleCaptureClick">
+                    <Button Color="Color.Primary" Clicked="@handleCaptureClick" Disabled="@(kunde.Bild != null)">
                         <Icon Name="IconName.Camera"/>
                         Bild aufnehmen
                     </Button>
@@ -60,7 +60,7 @@
     <Button Color="Color.Secondary" Margin="Margin.Is2.FromEnd" Clicked="() => stepsRef.PreviousStep()">
         Zurück
     </Button>
-    <Button Color="Color.Primary" Clicked="() => stepsRef.NextStep()">
+    <Button Color="Color.Primary" Clicked="@handleNextClicked">
         @if (stepsRef.SelectedStep == "Picture")
         {
             <span>Registrieren</span>
@@ -72,27 +72,24 @@
     </Button>
 </Div>
 @code {
-    private static Kunde defaultKunde = new()
-    {
+    private Steps stepsRef;
+    private string selectedStep = "Form";
+    private List<Produktgruppe> produktgruppen = ProduktgruppenRepository.GetAll();
+    private Kunde kunde = new Kunde() {
         Produktgruppen = new List<Produktgruppe>(),
         Unternehmen = new Unternehmen()
         {
             Id = -1
         }
     };
-    
-    private Steps stepsRef;
-    private string selectedStep = "Form";
-    private List<Produktgruppe> produktgruppen = ProduktgruppenRepository.GetAll();
-    private Kunde kunde = defaultKunde;
-    
+
     private async void handleCaptureClick()
     {
         if (!MediaPicker.Default.IsCaptureSupported) return;
-        
+
         var photo = await MediaPicker.Default.CapturePhotoAsync();
         if (photo == null) return;
-        
+
         byte[] bytes;
         await using var sourceStream = await photo.OpenReadAsync();
         using (var memoryStream = new MemoryStream())
@@ -101,11 +98,6 @@
             bytes = memoryStream.ToArray();
         }
         kunde.Bild = Convert.ToBase64String(bytes);
-
-        KundenRepository.Insert(kunde);
-        
-        kunde = defaultKunde;
-        selectedStep = "Form";
     }
 
     private void handleProduktgruppenChange(Produktgruppe produktgruppe, bool val)
@@ -117,6 +109,27 @@
         else
         {
             kunde.Produktgruppen.Remove(produktgruppe);
+        }
+    }
+
+    private void handleNextClicked()
+    {
+        if (stepsRef.SelectedStep == "Picture")
+        {
+            KundenService.SaveKunde(kunde);
+
+            kunde = new Kunde() {
+                Produktgruppen = new List<Produktgruppe>(),
+                Unternehmen = new Unternehmen()
+                {
+                    Id = -1
+                }
+            };
+            selectedStep = "Form";
+        }
+        else
+        {
+            stepsRef.NextStep();
         }
     }
 }

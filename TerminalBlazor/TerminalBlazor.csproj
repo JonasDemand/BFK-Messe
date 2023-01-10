@@ -66,8 +66,12 @@
       <None Remove="Blazorise.Icons.FontAwesome" />
       <None Remove="Blazorise.Bootstrap5" />
       <None Remove="Shared\" />
+      <None Remove="Service\" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\DbConnection\DbConnection.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Service\" />
     </ItemGroup>
 </Project>

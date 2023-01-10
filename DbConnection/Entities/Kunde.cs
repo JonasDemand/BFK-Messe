@@ -8,6 +8,6 @@ public class Kunde
     public string Adress1 { get; set; }
     public string Adress2 { get; set; }
     public string Bild { get; set; }
-    public Unternehmen Unternehmen { get; set; }
+    public Unternehmen? Unternehmen { get; set; }
     public List<Produktgruppe> Produktgruppen { get; set; }
 }
