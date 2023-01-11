@@ -12,22 +12,24 @@ namespace TerminalBlazor
 		{
             Task.Run(async () =>
             {
-                try
+                while (true)
                 {
-                    DbConnection.Connector.ReopenConnection();
+                    try
+                    {
+                        DbConnection.Connector.ReopenConnection();
+                        _kunden.ForEach(x =>
+                        {
+                            KundenRepository.Insert(x);
+                            _kunden.Remove(x);
+                        });
 
-                } catch
-                {
-                    return;
+                    }
+                    catch {}
+                    finally
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(60));
+                    }
                 }
-
-                _kunden.ForEach(x =>
-                {
-                    KundenRepository.Insert(x);
-                    _kunden.Remove(x);
-                });
-
-                await Task.Delay(TimeSpan.FromSeconds(60));
             });
         }
 
