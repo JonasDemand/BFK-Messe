@@ -16,17 +16,11 @@ public static class KundenRepository
 	            k.Adress2,
 	            k.Bild,
 	            k.UnternehmenId,
-	            u.Name AS UnternehmenName,
-	            p.Id AS ProduktgruppenId,
-	            p.Name AS ProduktgruppenName
+	            u.Name AS UnternehmenName
             FROM
 	            Kunden k
             LEFT JOIN Unternehmen u ON
 	            k.UnternehmenId = u.Id
-            LEFT JOIN KundenProduktgruppen kp ON
-	            k.Id = kp.KundenId
-            INNER JOIN Produktgruppen p ON
-	            kp.ProduktgruppenId = p.Id
         ");
         var kunden = dt.AsEnumerable().Select(row =>
             new Kunde
