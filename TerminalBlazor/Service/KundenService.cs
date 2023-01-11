@@ -27,7 +27,7 @@ namespace TerminalBlazor
                     _kunden.Remove(x);
                 });
 
-                await Task.Delay(TimeSpan.FromSeconds(360));
+                await Task.Delay(TimeSpan.FromSeconds(60));
             });
         }
 
